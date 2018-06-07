@@ -1,0 +1,29 @@
+{
+  "builders": [{
+    "type": "amazon-ebs",
+    "access_key": "",
+    "secret_key": "",
+    "region": "us-west-2",
+    "source_ami": "ami-31394949",
+    "instance_type": "t2.micro",
+    "ssh_username": "ec2-user",
+    "ami_name": "cloudsec-training-{{timestamp}}"
+  }],
+  
+  "provisioners": [
+    {
+      "type": "shell",
+      "inline": ["sudo amazon-linux-extras install ansible2"]
+    },
+    {
+    "type": "ansible-local",
+    "playbook_file": "ansible-base.yml",
+    "extra_arguments": [ "--verbose" ]
+  },
+  {
+    "type": "file",
+    "source": "cloudsec_advanced_server.rb",
+    "destination": "/home/ec2-user/cloudsec_advanced_server.rb"
+  }
+  ]
+}

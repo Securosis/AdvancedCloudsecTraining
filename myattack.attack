@@ -1,0 +1,32 @@
+@slow
+Feature: simple nmap attack
+
+  Background:
+    Given "nmap" is installed
+
+    And the following environment variables:
+      | name      | environment_variable_name |
+      | hostname  | TEST_HOSTNAME             |
+
+    And the following profile:
+      | name     | value |
+      | ssh_port | 22 |
+
+  Scenario: Verify instance has SSH disabled
+    When I launch an "nmap" attack with:
+      """
+      nmap <hostname>
+      """
+    Then the output should not contain:
+      """
+      22/tcp
+      """
+  Scenario: Verify server is open on expected set of ports
+    When I launch an "nmap" attack with:
+      """
+      nmap -p 4567 <hostname>
+      """
+    Then the output should match:
+      """
+      4567/tcp\s+open
+      """

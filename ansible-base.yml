@@ -1,0 +1,24 @@
+---
+- hosts: all
+  remote_user: root
+  become: yes
+  tasks:
+# For some reason you can't install multiple gems in the same task with Ansible, so splitting
+  - name: install Ruby
+    command: bash amazon-linux-extras install ruby2.4
+  - name: install sinatra
+    gem: name=sinatra version=1.4.8 user_install=no
+  - name: install aws-sdk
+    gem: name=aws-sdk state=latest user_install=no
+  - name: disable ssh
+    command: chkconfig sshd off
+  - name: remove ssh
+    command: rpm -e openssh-server
+  - name: set startup permissions
+    command: chmod +x /etc/rc.d/rc.local
+  - name: start demo web server
+    lineinfile: dest=/etc/rc.d/rc.local line="nohup ruby /home/ec2-user/cloudsec_advanced_server.rb &"
+  - name: download inspector
+    command: wget https://d1wk0tztpsntt1.cloudfront.net/linux/latest/install
+#  - name: install inspector
+#    command: bash install
