@@ -24,7 +24,7 @@ pipeline {
         }
         stage('Deploy') {
             steps {
-                echo 'Deploying....
+                echo 'Deploying....'
                 script {
                           // trim removes leading and trailing whitespace from the string
                           image_id = readFile('ami.txt').trim()
