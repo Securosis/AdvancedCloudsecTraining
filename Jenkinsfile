@@ -24,13 +24,13 @@ pipeline {
         }
         stage('Deploy') {
             steps {
+                echo 'Deploying....
                 script {
                           // trim removes leading and trailing whitespace from the string
                           image_id = readFile('ami.txt').trim()
                         }
                 echo "Image ID for new AMI: ${image_id}"
-                sh "ruby rolling_update.rb -y ${ASG_NAME} ${image_id}"
-                echo 'Deploying....'
+                sh "ruby rolling_update.rb -y ${ASG_NAME} ${image_id}"'
             }
         }
     }
