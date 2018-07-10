@@ -7,7 +7,9 @@
   - name: install Ruby
     command: bash amazon-linux-extras install ruby2.4
   - name: install sinatra
-    gem: name=sinatra version=1.4.8 user_install=no
+#    gem: name=sinatra version=1.4.8 user_install=no
+#  - name: install aws-sdk
+    gem: name=sinatra state=latest user_install=no
   - name: install aws-sdk
     gem: name=aws-sdk state=latest user_install=no
   - name: disable ssh
@@ -20,5 +22,10 @@
     lineinfile: dest=/etc/rc.d/rc.local line="nohup ruby /home/ec2-user/cloudsec_advanced_server.rb &"
   - name: download inspector
     command: wget https://d1wk0tztpsntt1.cloudfront.net/linux/latest/install
+  - name: swap in log receiver address
+    lineinfile:
+      path: /etc/rsyslog.conf
+      regexp: '#*.* @@remote-host:514'
+      line: '*.* @@10.0.1.249:5140'
 #  - name: install inspector
 #    command: bash install

@@ -78,7 +78,7 @@ end
 set :environment, :production
 
 # Start all the sinatra stuff
-get '/' do 
+get '/' do
   erb :index
 end
 

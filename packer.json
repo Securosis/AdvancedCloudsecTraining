@@ -24,6 +24,11 @@
     "type": "file",
     "source": "cloudsec_advanced_server.rb",
     "destination": "/home/ec2-user/cloudsec_advanced_server.rb"
+  },
+  {
+    "type": "file",
+    "source": "configure-logs.sh",
+    "destination": "/home/ec2-user/configure-logs.sh"
   }
   ]
 }
