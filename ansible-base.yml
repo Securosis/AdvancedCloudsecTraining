@@ -3,12 +3,9 @@
   remote_user: root
   become: yes
   tasks:
-# For some reason you can't install multiple gems in the same task with Ansible, so splitting
   - name: install Ruby
     command: bash amazon-linux-extras install ruby2.4
   - name: install sinatra
-#    gem: name=sinatra version=1.4.8 user_install=no
-#  - name: install aws-sdk
     gem: name=sinatra state=latest user_install=no
   - name: install aws-sdk
     gem: name=aws-sdk state=latest user_install=no
@@ -27,5 +24,5 @@
       path: /etc/rsyslog.conf
       regexp: '#*.* @@remote-host:514'
       line: '*.* @@10.0.1.249:5140'
-#  - name: install inspector
-#    command: bash install
+  - name: install inspector
+    command: bash install

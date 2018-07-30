@@ -108,8 +108,8 @@ def assess():
     ec2.delete_security_group(GroupId=sg)
     ec2.delete_key_pair(KeyName=tmpkey)
 
-    # if result_code != 0:
-    #     sys.exit(1)
+     if result_code != 0:
+         sys.exit(1)
 
 if __name__ == "__main__":
     assess()
