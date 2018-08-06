@@ -26,7 +26,7 @@ def assess():
     region = 'us-west-2'
     job_console = requests.get('http://127.0.0.1:8080/job/Website/lastBuild/consoleText', auth=('admin', 'ec3892ddfc2276191a32702bf3e0ced0'))
     click.echo(job_console.text)
-    pattern = re.compile('(?<= )ami-.{8,17}')
+    pattern = re.compile('(?<= )ami-.{17}')
     image_id = ''
     for image_id in re.findall(pattern, job_console.text):
         pass
