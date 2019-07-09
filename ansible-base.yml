@@ -11,8 +11,9 @@
     gem: name=aws-sdk state=latest user_install=no
   - name: disable ssh
     command: chkconfig sshd off
-  - name: remove ssh
-    command: rpm -e openssh-server
+# ssh required due to an AWS SSM dependency    
+#  - name: remove ssh
+#    command: rpm -e openssh-server
   - name: set startup permissions
     command: chmod +x /etc/rc.d/rc.local
   - name: start demo web server
