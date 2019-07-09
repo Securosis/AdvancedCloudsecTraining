@@ -1,7 +1,7 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'ASG_NAME', defaultValue: 'website', description: 'Name of the auto scale group to update. Defaults to the training class expected name if not set.'),
+        string(name: 'ASG_NAME', defaultValue: 'website', description: 'Name of the auto scale group to update. Defaults to the training class expected name if not set.')
         string(name: 'AWS_ACCOUNT', description: 'The AWS Account ID where the auto scaling group to update is located')
         }
     stages {
