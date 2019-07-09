@@ -69,7 +69,7 @@ def assess():
     click.echo(sg)
     # add rule to security group
     ec2.authorize_security_group_ingress(GroupId=sg, IpPermissions=[{'IpProtocol': '-1', 'FromPort': -1,'ToPort': -1,'UserIdGroupPairs': [{'GroupId': jenkins_sg}]}])
-    instance = ec2.run_instances(ImageId=image_id, InstanceType='t2.micro', SecurityGroupIds=[sg], IamInstanceProfile={'Name': 'Dev'}, SubnetId=curr_subnet.text, MaxCount=1, MinCount=1)
+    instance = ec2.run_instances(ImageId=image_id, InstanceType='t2.micro', SecurityGroupIds=[sg], IamInstanceProfile={'Name': 'SecOps'}, SubnetId=curr_subnet.text, MaxCount=1, MinCount=1)
     click.echo('Launching Instance ' + instance['Instances'][0]['InstanceId'] + '... will resume when it is running')
     waiter = ec2.get_waiter('instance_running')
     waiter.wait(InstanceIds=[instance['Instances'][0]['InstanceId']])
