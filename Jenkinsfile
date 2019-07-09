@@ -1,7 +1,8 @@
 pipeline {
     agent any
     parameters {
-        string(name: 'ASG_NAME', defaultValue: 'website', description: 'Name of the auto scale group to update. Defaults to the training class expected name if not set.')
+        string(name: 'ASG_NAME', defaultValue: 'website', description: 'Name of the auto scale group to update. Defaults to the training class expected name if not set.'),
+        string(name: 'AWS_ACCOUNT', description: 'The AWS Account ID where the auto scaling group to update is located')
         }
     stages {
         stage('Security Credential Scan') {
@@ -36,7 +37,7 @@ pipeline {
                           image_id = readFile('ami.txt').trim()
                         }
                 echo "Image ID for new AMI: ${image_id}"
-                sh "ruby rolling_update.rb -y ${ASG_NAME} ${image_id}"
+                sh "ruby rolling_update.rb -y ${ASG_NAME} -a ${AWS_ACCOUNT} ${image_id}"
             }
         }
     }
