@@ -12,8 +12,14 @@ require 'optparse'
 class AutoscaleActions
 	def initialize
 		# Initialize the needed service clients
-		@@ec2 = Aws::EC2::Client.new(region: "#{$region}")
-		@@autoscaling = Aws::AutoScaling::Client.new(region: "#{$region}")
+		sts = Aws::STS::Client.new(region: "#{$region}")
+		role = sts.assume_role({
+  			role_arn: "arn:aws:iam::#{$account_id}:role/SecOps",
+  			role_session_name: "cloudsec-jenkins",
+			})
+
+		@@ec2 = Aws::EC2::Client.new(credentials: role, region: "#{$region}")
+		@@autoscaling = Aws::AutoScaling::Client.new(credentials: role, region: "#{$region}")
 	end
 	
 	def get_autoscale_group_details(asg_name)
@@ -234,6 +240,11 @@ optparse = OptionParser.new do |opts|
 		options[:region] = region
 	end
 	
+	options[:account_id] = ""
+	opts.on( '-a', '--account_id ACCOUNTID', 'Set the account ID for the AWS account. Default is none' ) do |account_id|
+		options[:account_id] = account_id
+	end
+	
 	options[:mode] = "degrade_health"
 	opts.on( '-m', '--mode MODE', 'Set the mode for removing instances from the auto scale group. Default is degrade_health. Other options are terminate and detach_and_quarantine' ) do |method|
 		options[:mode] = mode
@@ -260,6 +271,7 @@ end
 optparse.parse!
 # Set the region
 $region = options[:region]
+$account_id = options[:account_id]
 # Initialize the class for the auto scale group actions
 autoscale = AutoscaleActions.new()
 
