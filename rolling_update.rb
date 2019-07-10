@@ -35,7 +35,7 @@ class AutoscaleActions
   			else
   				# Get the launch configuration name and then the associated image ID
   				launch_configuration_name = asg_details.auto_scaling_groups.first.launch_configuration_name
-  				launch_config = @@autoscaling.describe_launch_configurations({launch_configuration_names: ["#{launch_configuration_name}"]})
+				launch_config = @@autoscaling.describe_launch_configurations({launch_configuration_names: ["#{launch_configuration_name}"]})
 		  	# get the current AMI 
 		  		current_image_id = launch_config.launch_configurations.first.image_id
 		  		return launch_configuration_name, current_image_id
@@ -84,7 +84,9 @@ class AutoscaleActions
 		  	if launch_config[:ramdisk_id] == ""
 		  		launch_config.delete(:ramdisk_id)
 		  	end
-		  	if launch_config[:block_device_mappings].first[:ebs].has_key?(:snapshot_id) == true
+		  	if launch_config[:block_device_mappings] == []
+		  		launch_config.delete(:block_device_mappings)
+		  	elsif launch_config[:block_device_mappings].first[:ebs].has_key?(:snapshot_id) == true
 		  		launch_config[:block_device_mappings].first[:ebs].delete(:snapshot_id)
 		  	end
 		  	@@autoscaling.create_launch_configuration(launch_config)
