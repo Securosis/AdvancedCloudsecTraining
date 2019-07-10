@@ -4,7 +4,7 @@
     "access_key": "",
     "secret_key": "",
     "region": "us-west-2",
-    "source_ami": "ami-31394949",
+    "source_ami": "ami-082b5a644766e0e6f",
     "instance_type": "t2.micro",
     "ssh_username": "ec2-user",
     "ami_name": "cloudsec-training-{{timestamp}}"
