@@ -26,6 +26,7 @@ class AutoscaleActions
 		# This method pulls the current launch configuration and image_id when given an auto scale group
 		begin
 			# Get details for the named ASG
+			puts "Getting autoscale group details"
 			asg_details = @@autoscaling.describe_auto_scaling_groups({
   							auto_scaling_group_names: ["#{asg_name}"]})
   			# Check to see if it was a valid name for the current region
@@ -34,13 +35,16 @@ class AutoscaleActions
   				exit
   			else
   				# Get the launch configuration name and then the associated image ID
+  				puts "Getting launch configuration name"
   				launch_configuration_name = asg_details.auto_scaling_groups.first.launch_configuration_name
+  				puts "Getting launch configuration details"
 				launch_config = @@autoscaling.describe_launch_configurations({launch_configuration_names: ["#{launch_configuration_name}"]})
 		  	# get the current AMI 
 		  		current_image_id = launch_config.launch_configurations.first.image_id
+		  		puts "Current launch configuration is #{launch_configuration_name} and image id is #{current_image_id}"
 		  		return launch_configuration_name, current_image_id
   			end
-  			puts "Current launch configuration is #{launchconfiguration_name} and image id is #{current_image_id}"
+  			puts "Current launch configuration is #{launch_configuration_name} and image id is #{current_image_id}"
 		rescue Aws::AutoScaling::Errors::ServiceError => error
 			puts "error encountered in get_autoscale_group_details: "
 			puts "#{error.message}"
@@ -54,6 +58,7 @@ class AutoscaleActions
 		begin
 			puts new_ami
 			# pull the current configuration as an object
+			puts launch_configuration_name
 		  	launch_config = @@autoscaling.describe_launch_configurations({launch_configuration_names: ["#{launch_configuration_name}"]})
 		  	# Confirm the new AMI is valid
 		  	test = @@ec2.describe_images({image_ids: ["#{new_ami}"]})
@@ -84,12 +89,17 @@ class AutoscaleActions
 		  	if launch_config[:ramdisk_id] == ""
 		  		launch_config.delete(:ramdisk_id)
 		  	end
+		  	if launch_config[:key_name] == ""
+		  		launch_config.delete(:key_name)
+		  	end
 		  	if launch_config[:block_device_mappings] == []
 		  		launch_config.delete(:block_device_mappings)
 		  	elsif launch_config[:block_device_mappings].first[:ebs].has_key?(:snapshot_id) == true
 		  		launch_config[:block_device_mappings].first[:ebs].delete(:snapshot_id)
 		  	end
+		  	puts launch_config
 		  	@@autoscaling.create_launch_configuration(launch_config)
+		  	puts "New launch configuration created"
 		  	return newname
 		rescue Aws::AutoScaling::Errors::ServiceError => error
 			puts "error encountered in method"
