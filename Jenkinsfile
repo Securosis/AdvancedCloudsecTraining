@@ -38,7 +38,7 @@ pipeline {
                         }
                 echo "Image ID for new AMI: ${image_id}"
                 sh "aws ec2 modify-image-attribute --image-id ${image_id} --launch-permission 'Add=[{UserId=${AWS_ACCOUNT}}]' --region us-west-2"
-                sh "ruby rolling_update.rb -y ${ASG_NAME} -a ${AWS_ACCOUNT} ${image_id}"
+                sh "ruby rolling_update.rb -y -a ${AWS_ACCOUNT} ${ASG_NAME} ${image_id}"
             }
         }
     }
